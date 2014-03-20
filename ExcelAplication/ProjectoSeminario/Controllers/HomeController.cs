@@ -13,36 +13,16 @@ namespace ProjectoSeminario.Controllers
         public static void SetupPath()
         {
             var oldPath = System.Environment.GetEnvironmentVariable("PATH");
-            var rPath = System.Environment.Is64BitProcess ? @"C:\Program Files\R\R-3.0.2\bin\x64" : @"C:\Program Files\R\R-3.0.2\bin\i386";
+            var rPath = System.Environment.Is64BitProcess ? @"C:\Program Files\R\R-3.0.3\bin\x64" : @"C:\Program Files\R\R-3.0.3\bin\i386";
 
             if (Directory.Exists(rPath) == false)
                 throw new DirectoryNotFoundException(string.Format("Could not found the specified path to the directory containing R.dll: {0}", rPath));
             var newPath = string.Format("{0}{1}{2}", rPath, System.IO.Path.PathSeparator, oldPath);
             System.Environment.SetEnvironmentVariable("PATH", newPath);
 
-            string rHome = "";
-            var platform = Environment.OSVersion.Platform;
-            switch (platform)
-            {
-                case PlatformID.Win32NT:
-                    break;
-                case PlatformID.MacOSX:
-                    rHome = "/Library/Frameworks/R.framework/Resources";
-                    break;
-                case PlatformID.Unix:
-                    rHome = "/usr/lib/R";
-                    break;
-                default:
-                    throw new NotSupportedException(platform.ToString());
-            }
-            if (!string.IsNullOrEmpty(rHome))
-                Environment.SetEnvironmentVariable("R_HOME", rHome);
         }
         public ActionResult Index()
         {
-            
-
-
             SetupPath();
             REngine engine = REngine.CreateInstance("RDotNet");
             
